@@ -6,3 +6,5 @@ run npm run seed. Seed the database.
 make routes,
 make models,
 upload to heroku,
+
+look in express hot restaurant, use router instead of app. Make 2 gets, 4 routes, make html and api routes.

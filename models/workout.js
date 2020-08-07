@@ -2,11 +2,10 @@ const mongoose = require("mongoose");
 const Schema = mongoose.Schema;
 
 const WorkoutSchema = new Schema({
-    _id:Number,
     day: Number,
     
     exercises:[{
-    type: String,
+    type: {type:String},
     name: String,
     duration: Number,
     weight: Number,

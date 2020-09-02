@@ -1,56 +1,31 @@
 const express = require("express");
-const logger = require("morgan");
+
 const mongoose = require("mongoose");
-const apiroutes = require("./routes/workoutRoute");
-const htmlroutes = require("./routes/htmlExercise");
-
-const PORT = process.env.PORT || 3000;
-
-const db = require("./models");
-
+const routes = require("./routes");
 const app = express();
+const PORT = process.env.PORT || 3001;
 
-app.use(logger("dev"));
-
+// Configure body parsing for AJAX requests
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
+// Serve up static assets
+if (process.env.NODE_ENV === "production") {
+  app.use(express.static("client/build"));
+}
 
-app.use(express.static("public"));
-app.use(apiroutes);
-app.use(htmlroutes)
+// Add routes, both API and view
+app.use(routes);
 
-const MONGODB_URI = process.env.Atlas || "mongodb://localhost/workout";
-mongoose.connect(MONGODB_URI,{ useNewUrlParser: true });
+// Connect to the Mongo DB
+mongoose.connect(
+  process.env.MONGODB_URI || "mongodb://localhost/reactbooks",
+  {
+    useCreateIndex: true,
+    useNewUrlParser: true
+  }
+);
 
-
-const { MongoClient } = require("mongodb");
-
-// Connection URI
-// const uri =
-//   "mongodb://localhost/workout:27017";
-
-// // Create a new MongoClient
-// const client = new MongoClient(uri);
-
-// async function run() {
-//   try {
-//     // Connect the client to the server
-//     await client.connect();
-
-//     // Establish and verify connection
-//     await client.db("admin").command({ ping: 1 });
-//     console.log("Connected successfully to server");
-//   } finally {
-//     // Ensures that the client will close when you finish/error
-//     await client.close();
-//   }
-// }
-// run().catch(console.dir);
-
-
-
-
-// Start the server
-app.listen(PORT, () => {
-  console.log(`App running on port ${PORT}!`);
-});
+// Start the API server
+app.listen(PORT, () =>
+  console.log(`🌎  ==> API Server now listening on PORT ${PORT}!`)
+);
